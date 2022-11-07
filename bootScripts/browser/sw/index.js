@@ -114,7 +114,7 @@ self.addEventListener('message', function (event) {
                     // Prevent multiple resolves in case
                     // multiple tabs are open
                     seedResolver = null;
-                    return;
+
                 }
             })
         }
@@ -211,11 +211,6 @@ function bootSWEnvironment(seed, callback) {
     global.server = server;
     let openDsu = require("opendsu");
     let config = openDsu.loadApi("config");
-
-    let mainSSI = openDsu.loadApi("keyssi").parse(seed);
-    if (mainSSI.getHint() == "server") {
-        config.disableLocalVault();
-    }
 
     bootScript.boot((err, _rawDossier) => {
         if (err) {
