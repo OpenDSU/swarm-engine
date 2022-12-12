@@ -63,7 +63,7 @@ function boot() {
         return sendErrorAndExit("missing authorizationKey");
     }
 
-    let { seed, authorizationKey, cacheContainerPath } = workerData;
+    let { seed, authorizationKey, cacheContainerPath, walletAnchorId } = workerData;
     let dsuCodeFileCacheHandler; // used to construct local FS cache from DSU mounted at /code
 
     const startHttpServer = (dsu) => {
@@ -106,7 +106,8 @@ function boot() {
             if (requestedPath.indexOf("/getSSIForMainDSU") === 0) {
                 return mainDSUSSIHandler.handle(seed, res);
             }
-            fileRequestHandler.handle(dsu, req, res, seed, requestedPath, dsuCodeFileCacheHandler);
+            const seedForHtmlContent = walletAnchorId || seed;
+            fileRequestHandler.handle(dsu, req, res, seedForHtmlContent, requestedPath, dsuCodeFileCacheHandler);
         });
 
         httpServer.listen(0, function () {
