@@ -126,6 +126,9 @@ function boot() {
         http.registerInterceptor((data, callback)=>{
             let {url, headers} = data;
             if (workerData.cookie) {
+                if(!headers){
+                    headers = {};
+                }
                 headers.cookie = workerData.cookie;
             }
             callback(undefined, {url, headers})
