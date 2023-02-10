@@ -1,6 +1,7 @@
 const http = require("http");
 const worker_threads = "worker_threads";
 const { parentPort, workerData } = require(worker_threads);
+let cookie = workerData.cookie;
 const openDSU = require("opendsu");
 const resolver = openDSU.loadApi("resolver");
 
@@ -75,6 +76,10 @@ function boot() {
                 return res.end("Unauthorized request");
             }
 
+            if(req.headers.cookie){
+                cookie = req.headers.cookie;
+            }
+
             const requestedPath = url;
 
             console.log(`Handling url: ${requestedPath}`);
@@ -125,11 +130,11 @@ function boot() {
         const http = openDSU.loadAPI("http");
         http.registerInterceptor((data, callback)=>{
             let {url, headers} = data;
-            if (workerData.cookie) {
+            if (cookie) {
                 if(!headers){
                     headers = {};
                 }
-                headers.cookie = workerData.cookie;
+                headers.cookie = cookie;
             }
             callback(undefined, {url, headers})
         });
